@@ -1,0 +1,20 @@
+{
+    "name": "Taxonomy",
+    "alias": "taxonomy",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 1,
+    "version": "1.0",
+    "providers": [
+        "Modules\\Taxonomy\\Providers\\TaxonomyServiceProvider",
+        "Modules\\Taxonomy\\Providers\\RouteServiceProvider"
+    ],
+    "aliases": {
+        "TaxonomyChooseTermsDirective": "Modules\\Taxonomy\\Blade\\Facades\\TaxonomyChooseTermsDirective"
+    },
+    "files": [
+        "helpers.php"
+    ],
+    "requires": []
+}
