@@ -1,16 +1,16 @@
 {
-    "name": "webvi/taxonomy",
+    "name": "daothanh/taxonomy",
     "description": "",
     "type": "asgard-module",
     "license": "MIT", 
     "require": {
         "php": ">=5.6",
         "composer/installers": "~1.0",
-        "idavoll/core-module": "~2.0"
+        "idavoll/core-module": "~3.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~5.7",
-        "orchestra/testbench": "3.4.*"
+        "phpunit/phpunit": "~6.0",
+        "orchestra/testbench": "3.5.*"
     },
     "autoload-dev": {
         "psr-4": {
@@ -22,8 +22,8 @@
     "prefer-stable": true,
     "authors": [
         {
-            "name": "Nicolas Widart",
-            "email": "n.widart@gmail.com"
+            "name": "Thanh Dao",
+            "email": "me@daothanh.com"
         }
     ],
     "autoload": {
