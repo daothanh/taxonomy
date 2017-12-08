@@ -9,7 +9,9 @@ use Modules\Core\Events\BuildingSidebar;
 use Modules\Taxonomy\Blade\TaxonomyChooseTermsDirective;
 use Modules\Taxonomy\Contracts\DeletingTerm;
 use Modules\Taxonomy\Contracts\TermHierarchy;
+use Modules\Taxonomy\Contracts\TermLink;
 use Modules\Taxonomy\Events\Handlers\HandleTermHierarchy;
+use Modules\Taxonomy\Events\Handlers\HandleTermLink;
 use Modules\Taxonomy\Events\Handlers\RegisterTaxonomySidebar;
 use Modules\Taxonomy\Events\Handlers\RemoveTermPolymorphicLink;
 
@@ -39,7 +41,8 @@ class TaxonomyServiceProvider extends ServiceProvider {
     $this->publishConfig('taxonomy', 'assets');
 
     $events->listen(TermHierarchy::class, HandleTermHierarchy::class);
-    $events->listen(DeletingTerm::class, HandleTermHierarchy::class);
+    $events->listen(TermLink::class, HandleTermLink::class);
+    $events->listen(DeletingTerm::class, RemoveTermPolymorphicLink::class);
     $events->listen(DeletingTerm::class, RemoveTermPolymorphicLink::class);
 
     $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
