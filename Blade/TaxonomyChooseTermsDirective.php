@@ -3,6 +3,8 @@
 namespace Modules\Taxonomy\Blade;
 
 use Modules\Taxonomy\Composers\Backend\BladeDirectiveAssetComposer;
+use Modules\Taxonomy\Repositories\VocabularyRepository;
+use Modules\Taxonomy\Support\Traits\Termable;
 
 class TaxonomyChooseTermsDirective
 {
@@ -11,7 +13,7 @@ class TaxonomyChooseTermsDirective
    */
     private $vid;
   /**
-   * @var
+   * @var Termable
    */
     private $entity;
   /**
@@ -39,7 +41,7 @@ class TaxonomyChooseTermsDirective
                 $entityTerms = $this->entity->termsByVocabularyId($this->vid)->get();
             }
 
-            return view($view, compact('terms', 'entityTerms', 'vid', 'name', 'vocabulary'))->render();
+	        return view( $view, compact( 'terms', 'entityTerms', 'vid', 'name', 'vocabulary' ) )->render();
         }
         return '';
     }
@@ -50,7 +52,14 @@ class TaxonomyChooseTermsDirective
    */
     private function extractArguments(array $arguments)
     {
-        $this->vid = array_get($arguments, 0);
+        $vid = array_get($arguments, 0);
+        if (is_string($vid)) {
+        	$vocabulary = app(VocabularyRepository::class)->findByAttributes(['machine_name' => $vid]);
+        	if($vocabulary) {
+        		$vid = $vocabulary->id;
+	        }
+        }
+        $this->vid = $vid;
         $this->entity = array_get($arguments, 1);
         $this->view = array_get($arguments, 2);
         $this->name = array_get($arguments, 3);
