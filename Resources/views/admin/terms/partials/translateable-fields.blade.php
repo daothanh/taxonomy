@@ -1,11 +1,11 @@
 <div class="box-body">
-    {!! Form::i18nInput('name', trans('taxonomy::terms.form.name'), $errors, $locale, $term, ['data-slug' => 'source']) !!}
+    {!! Form::i18nInput('name', trans('taxonomy::terms.form.name'), $errors, $lang, $term, ['data-slug' => 'source']) !!}
     <div class='form-group{{ $errors->has("{$lang}.slug") ? ' has-error' : '' }}'>
         {!! Form::label("{$lang}[slug]", trans('taxonomy::terms.form.slug')) !!}
-        {!! Form::text("{$lang}[slug]", old("{$lang}.slug", !empty($term) ? $term->translate($locale)->slug : null), ['class' => 'form-control slug', 'data-slug' => 'target', 'placeholder' => trans('taxonomy::terms.form.slug')]) !!}
+        {!! Form::text("{$lang}[slug]", old("{$lang}.slug", !empty($term) ? $term->translate($lang)->slug : null), ['class' => 'form-control slug', 'data-slug' => 'target', 'placeholder' => trans('taxonomy::terms.form.slug')]) !!}
         {!! $errors->first("{$lang}.slug", '<span class="help-block">:message</span>') !!}
     </div>
-    {!! Form::i18nTextarea('description', trans('taxonomy::terms.form.description'), $errors, $locale, $term) !!}
+    {!! Form::i18nTextarea('description', trans('taxonomy::terms.form.description'), $errors, $lang, $term) !!}
 
     <div class="box-group" id="accordion">
         <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
