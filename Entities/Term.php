@@ -40,4 +40,9 @@ class Term extends Model
     {
         return $this->belongsToMany('Modules\Taxonomy\Entities\Term', 'taxonomy__terms_hierarchy', 'parent_id', 'term_id');
     }
+
+    public function vocabulary()
+    {
+    	return $this->belongsTo(Vocabulary::class, 'vocabulary_id', 'id');
+    }
 }

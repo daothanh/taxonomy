@@ -12,4 +12,9 @@ class Vocabulary extends Model
     protected $table = 'taxonomy__vocabularies';
     public $translatedAttributes = ['name', 'description'];
     protected $fillable = ['machine_name', 'can_change_machine_name'];
+
+    public function terms()
+    {
+    	return $this->hasMany(Term::class, 'vocabulary_id', 'id');
+    }
 }
