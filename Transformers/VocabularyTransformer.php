@@ -16,6 +16,7 @@ class VocabularyTransformer extends Resource {
 		$translatedVocabulary = optional( $this->translate( locale() ) );
 
 		return [
+			'id' => $this->id,
 			'machine_name'            => $this->machine_name,
 			'can_change_machine_name' => $this->can_change_machine_name,
 			'translations'            => [

@@ -3,11 +3,15 @@
 namespace Modules\Taxonomy\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Modules\Taxonomy\Entities\Term;
 use Modules\Taxonomy\Http\Requests\CreateTermRequest;
 use Modules\Taxonomy\Http\Requests\UpdateTermRequest;
 use Modules\Taxonomy\Repositories\TermRepository;
+use Modules\Taxonomy\Transformers\FullTermTransformer;
 use Modules\Taxonomy\Transformers\TermTransformer;
 
 class TermController extends Controller {
@@ -19,7 +23,14 @@ class TermController extends Controller {
 	}
 
 	public function index( Request $request ) {
-		return TermTransformer::collection( $this->term->serverPaginationFilteringFor( $request ) );
+		$terms = $this->term->getTree($request->get('vocabulary'), 0);
+
+		$total = count($terms);
+		if ($total == 0) {
+			$total = 1;
+		}
+			$paginator = new Paginator($terms, $total, $total);
+		return TermTransformer::collection( $paginator );
 	}
 
 	public function all() {
@@ -27,7 +38,7 @@ class TermController extends Controller {
 	}
 
 	public function find( Term $term ) {
-		return new TermTransformer( $term->load( [ 'parents', 'children' ] ) );
+		return new FullTermTransformer( $term->load( [ 'parents', 'children' ] ) );
 	}
 
 	public function findNew( Term $term ) {

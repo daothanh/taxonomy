@@ -1,5 +1,7 @@
 import VocabularyTable from './components/VocabularyTable.vue';
 import VocabularyForm from './components/VocabularyForm.vue';
+import TermTable from './components/TermTable.vue';
+import TermForm from './components/TermForm.vue';
 const locales = window.AsgardCMS.locales;
 
 export default [
@@ -25,6 +27,30 @@ export default [
         props: {
             locales,
             pageTitle: 'title.edit vocabulary',
+        },
+    },
+    // Term Routes
+    {
+        path: '/taxonomy/vocabularies/:vocabulary/terms',
+        name: 'admin.taxonomy.term.index',
+        component: TermTable,
+    },
+    {
+        path: '/taxonomy/vocabularies/:vocabulary/terms/create',
+        name: 'admin.taxonomy.term.create',
+        component: TermForm,
+        props: {
+            locales,
+            pageTitle: 'title.create term',
+        },
+    },
+    {
+        path: '/taxonomy/terms/:term/edit',
+        name: 'admin.taxonomy.term.edit',
+        component:TermForm,
+        props: {
+            locales,
+            pageTitle: 'title.edit term',
         },
     },
 ];

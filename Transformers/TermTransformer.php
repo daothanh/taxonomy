@@ -20,8 +20,11 @@ class TermTransformer extends Resource
 	        'vocabulary_id' => $this->vocabulary_id,
 	        'pos' => $this->pos,
 	        'status' => $this->status,
+	        'featured_image' => $this->featured_image ? $this->featured_image->path->getUrl() : '',
+	        'created_at' => $this->created_at ? $this->created_at->format('d-m-Y H:i:s') : null,
+	        'parent_ids' => count($this->parents) ? $this->parents->implode('id') : [0],
 	        'translations' => [
-		        'name' => $translatedTerm->name,
+		        'name' => !empty($this->depth) ? str_repeat('-', $this->depth)." ".$translatedTerm->name : $translatedTerm->name,
 		        'description' => $translatedTerm->description,
 		        'slug' => $translatedTerm->slug,
 		        'meta_title' => $translatedTerm->meta_title,

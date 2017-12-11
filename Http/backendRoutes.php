@@ -55,12 +55,12 @@ $router->group(['prefix' =>'/taxonomy'], function (Router $router) {
         'uses' => 'TermController@store',
         'middleware' => 'can:taxonomy.terms.create'
     ]);
-    $router->get('vocabularies/{vocabulary}/terms/{term}/edit', [
+    $router->get('terms/{term}/edit', [
         'as' => 'admin.taxonomy.term.edit',
         'uses' => 'TermController@edit',
         'middleware' => 'can:taxonomy.terms.edit'
     ]);
-    $router->put('vocabularies/{vocabulary}/terms/{term}', [
+    $router->put('terms/{term}', [
         'as' => 'admin.taxonomy.term.update',
         'uses' => 'TermController@update',
         'middleware' => 'can:taxonomy.terms.edit'

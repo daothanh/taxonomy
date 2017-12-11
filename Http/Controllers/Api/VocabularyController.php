@@ -8,6 +8,7 @@ use Modules\Taxonomy\Entities\Vocabulary;
 use Modules\Taxonomy\Http\Requests\CreateVocabularyRequest;
 use Modules\Taxonomy\Http\Requests\UpdateVocabularyRequest;
 use Modules\Taxonomy\Repositories\VocabularyRepository;
+use Modules\Taxonomy\Transformers\FullVocabularyTransformer;
 use Modules\Taxonomy\Transformers\VocabularyTransformer;
 
 class VocabularyController extends Controller {
@@ -27,7 +28,7 @@ class VocabularyController extends Controller {
 	}
 
 	public function find( Vocabulary $vocabulary ) {
-		return new VocabularyTransformer( $vocabulary );
+		return new FullVocabularyTransformer( $vocabulary );
 	}
 
 	public function findNew( Vocabulary $vocabulary ) {

@@ -68,9 +68,9 @@ class TermController extends AdminBaseController
      * @param  Term $term
      * @return Response
      */
-    public function edit($vocabulary, Term $term)
+    public function edit(Term $term)
     {
-        $parentTerms = ['0' => trans('taxonomy::terms.form.select parent')] + $this->term->getByAttributes(['vocabulary_id' => $vocabulary->id])->pluck('name', 'id')->toArray();
+        $parentTerms = ['0' => trans('taxonomy::terms.form.select parent')] + $this->term->getByAttributes(['vocabulary_id' => $term->vocabulary_id])->pluck('name', 'id')->toArray();
         return view('taxonomy::admin.terms.edit', compact('term', 'vocabulary', 'parentTerms'));
     }
 

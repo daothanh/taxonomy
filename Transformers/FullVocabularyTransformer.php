@@ -3,6 +3,7 @@
 namespace Modules\Taxonomy\Transformers;
 
 use Illuminate\Http\Resources\Json\Resource;
+use LaravelLocalization;
 
 class FullVocabularyTransformer extends Resource
 {
@@ -15,6 +16,7 @@ class FullVocabularyTransformer extends Resource
     public function toArray($request)
     {
 	    $data = [
+		    'id' => $this->id,
 		    'machine_name' =>$this->machine_name,
 		    'can_change_machine_name' => $this->can_change_machine_name,
 		    'urls'                    => [
