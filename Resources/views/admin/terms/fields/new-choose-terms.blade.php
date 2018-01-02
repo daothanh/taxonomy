@@ -10,7 +10,7 @@
                         {{str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', $term->depth)}}
                         <label>
                             <div class="icheckbox">
-                                {{Form::checkbox('terms['.$vid.']['.$term->id.']',$term->id, $entityTerms && $entityTerms->find($term->id) ? TRUE: FALSE, ['class' => 'terms'])}}
+                                {{Form::checkbox('term_ids['.$vid.']['.$term->id.']',$term->id, $entityTerms && $entityTerms->find($term->id) ? TRUE: FALSE, ['class' => 'terms'])}}
                                 {{$term->name}}
                             </div>
                         </label>

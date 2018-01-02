@@ -5,7 +5,7 @@ namespace Modules\Taxonomy\Transformers;
 use Illuminate\Http\Resources\Json\Resource;
 use LaravelLocalization;
 
-class FullTermTransformer extends Resource
+class FullTermForListTransformer extends Resource
 {
 	/**
 	 * Transform the resource into an array.
@@ -17,6 +17,7 @@ class FullTermTransformer extends Resource
 	 */
     public function toArray($request)
     {
+	    $translatedTerm = optional($this->translate(locale()));
         $data = [
         	'id' => $this->id,
 	        'vocabulary_id' => $this->vocabulary_id,
@@ -26,22 +27,23 @@ class FullTermTransformer extends Resource
 	        'parent_ids' => count($this->parents) ? $this->parents->pluck('id')->toArray() : [0],
 	        'child_ids' => count($this->children) ? $this->children->pluck('id')->toArray() : [],
 	        'created_at' => $this->created_at ? $this->created_at->format('d-m-Y H:i:s') : null,
+	        'depth' => $this->depth,
+	        'translations' => [
+		        'name' => $translatedTerm->name,
+		        'description' => $translatedTerm->description,
+		        'slug' => $translatedTerm->slug,
+		        'meta_title' => $translatedTerm->meta_title,
+		        'meta_description' => $translatedTerm->meta_description,
+		        'og_title' => $translatedTerm->og_title,
+		        'og_description' => $translatedTerm->og_description,
+		        'og_image' => $translatedTerm->og_image,
+		        'og_type' => $translatedTerm->og_type,
+	        ],
 	        'urls' => [
 		        'delete_url' => route('api.taxonomy.term.destroy', $this->id),
 	        ],
         ];
-	    foreach (LaravelLocalization::getSupportedLocales() as $locale => $supportedLocale) {
-		    $data[$locale] = [];
-		    $translatedTerm = $this->translateOrNew($locale);
-		    foreach ($this->translatedAttributes as $translatedAttribute) {
-		    	if ($translatedAttribute == 'name') {
-		    		$data[$locale][$translatedAttribute] = !empty($this->depth) ? str_repeat('-', $this->depth)." ".$translatedTerm->name : $translatedTerm->name;
-			    } else {
-				    $data[$locale][$translatedAttribute] = $translatedTerm->$translatedAttribute;
-			    }
 
-		    }
-	    }
 
 	    return $data;
     }

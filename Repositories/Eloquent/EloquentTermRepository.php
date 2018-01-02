@@ -179,6 +179,7 @@ class EloquentTermRepository extends EloquentBaseRepository implements TermRepos
         'taxonomy__terms.*',
         'taxonomy__terms_hierarchy.parent_id as parent',
         ])->leftJoin('taxonomy__terms_hierarchy', 'id', '=', 'term_id')
+	        ->with(['parents', 'children'])
         ->where('vocabulary_id', '=', $vid)
         ->orderBy('pos', 'asc')->get();
         
@@ -225,6 +226,21 @@ class EloquentTermRepository extends EloquentBaseRepository implements TermRepos
 			$query->where('id', $term);
 		}
 
+		if($request->get('vocabulary_id') !==null) {
+			$query->where('vocabulary_id', '=', $request->get('vocabulary_id'));
+		}
+
+		if($request->get('entity_id') !==null && $request->get('entity') !== null) {
+			$termables = \DB::table('taxonomy__termables')
+			               ->where('termable_id', $request->get('entity_id'))
+			               ->whereTermableType($request->get('entity'))
+			               ->get();
+			if ($termables) {
+				$query->whereIn('id', $termables->pluck('term_id')->toArray());
+			}
+		}
+
+
 		if ($request->get('order_by') !== null && $request->get('order') !== 'null') {
 			$order = $request->get('order') === 'ascending' ? 'asc' : 'desc';
 
@@ -263,5 +279,47 @@ class EloquentTermRepository extends EloquentBaseRepository implements TermRepos
 		}
 
 		return $this->model->newQuery();
+	}
+
+	/**
+	 * @param Term $term
+	 * @return mixed
+	 */
+	public function markAsOnline(Term $term)
+	{
+		return $this->update($term, ['status' => 1]);
+	}
+
+	/**
+	 * @param Term $term
+	 * @return mixed
+	 */
+	public function markAsOffline(Term $term)
+	{
+		return $this->update($term, ['status' => 0]);
+	}
+
+	/**
+	 * @param array $termIds [int]
+	 * @return mixed
+	 */
+	public function markMultipleAsOnline(array $termIds)
+	{
+		$terms = $this->allWithBuilder()->whereIn('id', $termIds)->get();
+		foreach ($terms as $term) {
+			$this->markAsOnline($term);
+		}
+	}
+
+	/**
+	 * @param array $termIds [int]
+	 * @return mixed
+	 */
+	public function markMultipleAsOffline(array $termIds)
+	{
+		$terms = $this->allWithBuilder()->whereIn('id', $termIds)->get();
+		foreach ($terms as $term) {
+			$this->markAsOffline($term);
+		}
 	}
 }

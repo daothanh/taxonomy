@@ -43,9 +43,14 @@
                                 </el-table-column>
                                 <el-table-column prop="translations.name" :label="trans('vocabularies.table.name')">
                                     <template slot-scope="scope">
-                                        <a @click.prevent="goToEdit(scope)" href="#">
+                                        <a @click="$router.push({name: 'admin.taxonomy.term.index', params: {vocabulary: scope.row.id}})">
                                             {{  scope.row.translations.name }}
                                         </a>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="description" :label="trans('vocabularies.table.description')">
+                                    <template slot-scope="scope">
+                                        <span v-html="scope.row.translations.description"></span>
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="machine_name" :label="trans('vocabularies.table.machine name')">
@@ -56,9 +61,6 @@
                                 <el-table-column prop="actions" :label="trans('core.table.actions')">
                                     <template slot-scope="scope">
                                         <el-button-group>
-                                            <el-button size="mini"
-                                                       @click="$router.push({name: 'admin.taxonomy.term.index', params: {vocabulary: scope.row.id}})"
-                                                       icon="el-icon-tickets" type="primary">L</el-button>
                                             <edit-button :to="{ name: 'admin.taxonomy.vocabulary.edit', params: { vocabulary: scope.row.id } }"></edit-button>
                                             <delete-button :scope="scope" :rows="data"></delete-button>
                                         </el-button-group>

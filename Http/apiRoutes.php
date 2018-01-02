@@ -29,7 +29,11 @@ $router->group(['prefix' => 'vocabularies', 'middleware' => ['api.token', 'auth.
 		'uses' => 'VocabularyController@find',
 		'middleware' => 'token-can:taxonomy.vocabularies.edit',
 	]);
-
+	$router->get('get/{vocabulary}', [
+		'as' => 'api.taxonomy.vocabulary.get',
+		'uses' => 'VocabularyController@get',
+		'middleware' => 'token-can:taxonomy.vocabularies.index',
+	]);
 	$router->post('{vocabulary}/edit', [
 		'as' => 'api.taxonomy.vocabulary.update',
 		'uses' => 'VocabularyController@update',
@@ -91,5 +95,20 @@ $router->group(['prefix' => 'terms', 'middleware' => ['api.token', 'auth.admin']
 		'as' => 'api.taxonomy.term.destroy',
 		'uses' => 'TermController@destroy',
 		'middleware' => 'token-can:taxonomy.terms.destroy',
+	]);
+
+	$router->get('mark-terms-status', [
+		'as' => 'api.taxonomy.term.mark-status',
+		'uses' => 'TermController@markStatus',
+		'middleware' => 'token-can:taxonomy.terms.edit',
+	]);
+
+	$router->get('/get/all', [
+		'as' => 'api.taxonomy.term.get.all',
+		'uses' => 'TermController@get',
+	]);
+	$router->get('/get/by', [
+		'as' => 'api.taxonomy.term.get.by',
+		'uses' => 'TermController@getBy',
 	]);
 });

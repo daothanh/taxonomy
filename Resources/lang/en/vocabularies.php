@@ -24,6 +24,9 @@ return [
         'description' => 'Description'
     ],
     'messages' => [
+    	'vocabulary was created' => 'Vocabulary was created',
+    	'vocabulary was updated' => 'Vocabulary was updated',
+    	'vocabulary was deleted' => 'Vocabulary was deleted',
     ],
     'validation' => [
         'attributes' => ['name' => 'Name']

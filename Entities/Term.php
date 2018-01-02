@@ -45,4 +45,16 @@ class Term extends Model
     {
     	return $this->belongsTo(Vocabulary::class, 'vocabulary_id', 'id');
     }
+
+    public function termableEntites($entity) {
+	    return $this->morphedByMany($entity, 'termable');
+    }
+
+    public function setStatusAttribute($value)
+    {
+    	if (empty($value)) {
+    		$value = 0;
+	    }
+    	$this->attributes['status'] = $value;
+    }
 }

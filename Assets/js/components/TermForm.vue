@@ -191,7 +191,7 @@
                         og_type: '',
                     }])
                     .fromPairs()
-                    .merge({ vocabulary_id: '', pos: '', status: '', parent_ids: []})
+                    .merge({ vocabulary_id: '', pos: 0, status: '0', parent_ids: []})
                     .value(),
                 form: new Form(),
                 loading: false,
@@ -224,7 +224,7 @@
         },
         methods: {
             onSubmit() {
-                if (this.term.parent_ids.length === 0) {
+                if (_.isEmpty(this.term.parent_ids)) {
                     this.term.parent_ids.push(0);
                 }
                 this.form = new Form(this.term);
@@ -257,10 +257,11 @@
                     .then((response) => {
                         this.loading = false;
                         this.term = response.data.data;
+                        this.term.status = this.term.status.toString();
                         this.vocabulary = this.term.vocabulary_id;
-                        if (this.term.parent_ids[0] === 0) {
-                            delete this.term.parent_ids[0];
-                        }
+                        _.remove(this.term.parent_ids, function (n) {
+                            return n === 0;
+                        });
                         this.fetchTerms();
                     });
             },

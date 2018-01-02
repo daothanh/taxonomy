@@ -11,6 +11,7 @@ use Modules\Taxonomy\Entities\Term;
 use Modules\Taxonomy\Http\Requests\CreateTermRequest;
 use Modules\Taxonomy\Http\Requests\UpdateTermRequest;
 use Modules\Taxonomy\Repositories\TermRepository;
+use Modules\Taxonomy\Transformers\FullTermForListTransformer;
 use Modules\Taxonomy\Transformers\FullTermTransformer;
 use Modules\Taxonomy\Transformers\TermTransformer;
 
@@ -74,5 +75,32 @@ class TermController extends Controller {
 			'errors'  => false,
 			'message' => trans( 'taxonomy::terms.messages.term deleted' ),
 		] );
+	}
+
+	public function get(Request $request) {
+		$terms = $this->term->getTree($request->get('vocabulary'), 0);
+
+		$total = count($terms);
+		if ($total == 0) {
+			$total = 1;
+		}
+		$paginator = new Paginator($terms, $total, $total);
+		return FullTermForListTransformer::collection( $paginator );
+	}
+
+	public function getBy(Request $request) {
+		return TermTransformer::collection($this->term->serverFilteringFor($request));
+	}
+	public function markStatus(Request $request)
+	{
+		$action = $request->get('action');
+		$termIds = json_decode($request->get('termIds'));
+		if ($action === 'mark-online') {
+			$this->term->markMultipleAsOnline($termIds);
+		} else {
+			$this->term->markMultipleAsOffline($termIds);
+		}
+
+		return response()->json(['errors' => false, 'message' => trans('taxonomy::terms.messages.terms were updated')]);
 	}
 }

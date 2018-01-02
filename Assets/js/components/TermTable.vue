@@ -1,14 +1,15 @@
 <template>
     <div class="div">
         <div class="content-header">
-            <h1>
-                {{ trans('terms.title.terms') }}
+            <h1 v-if="vocabularyData !== ''">
+                {{ vocabularyData.translations.name }}
             </h1>
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
                     <a href="/backend">Home</a>
                 </el-breadcrumb-item>
-                <el-breadcrumb-item :to="{name: 'admin.taxonomy.term.index'}">{{ trans('terms.title.terms') }}</el-breadcrumb-item>
+                <el-breadcrumb-item :to="{name: 'admin.taxonomy.vocabulary.index'}">{{ trans('vocabularies.title.vocabularies') }}</el-breadcrumb-item>
+                <el-breadcrumb-item :to="{name: 'admin.taxonomy.term.index'}" v-if="vocabularyData !== ''">{{ vocabularyData.translations.name }}</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
 
@@ -19,15 +20,20 @@
                         <div class="sc-table">
                             <div class="tool-bar el-row" style="padding-bottom: 20px;">
                                 <div class="actions el-col el-col-8">
+                                    <el-dropdown @command="handleExtraActions" v-if="showExtraButtons">
+                                        <el-button type="primary">
+                                            {{ trans('core.table.actions') }}<i class="el-icon-caret-bottom el-icon--right"></i>
+                                        </el-button>
+                                        <el-dropdown-menu slot="dropdown">
+                                            <el-dropdown-item command="mark-online">{{ trans('core.mark as online') }}</el-dropdown-item>
+                                            <el-dropdown-item command="mark-offline">{{ trans('core.mark as offline') }}</el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
                                     <router-link :to="{name: 'admin.taxonomy.term.create', params: {vocabulary: vocabulary}}">
                                         <el-button type="primary"><i class="el-icon-edit"></i>
                                             {{ trans('terms.title.create term') }}
                                         </el-button>
                                     </router-link>
-                                </div>
-                                <div class="search el-col el-col-5">
-                                    <el-input prefix-icon="el-icon-search" @keyup.native="performSearch" v-model="searchQuery">
-                                    </el-input>
                                 </div>
                             </div>
 
@@ -39,7 +45,9 @@
                                     v-loading.body="tableIsLoading"
                                     @sort-change="handleSortChange"
                                     @selection-change="handleSelectionChange">
-                                <el-table-column prop="id" label="Id" width="75" sortable="custom">
+                                <el-table-column
+                                        type="selection"
+                                        width="55">
                                 </el-table-column>
                                 <el-table-column prop="featured_image" :label="trans('terms.table.featured image')">
                                     <template slot-scope="scope">
@@ -56,9 +64,19 @@
                                         </a>
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="pos" :label="trans('terms.table.position')">
+                                <el-table-column prop="pos" :label="trans('terms.table.description')">
                                     <template slot-scope="scope">
-                                            {{  scope.row.pos }}
+                                            <span v-html="scope.row.description"></span>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="translations.slug" :label="trans('terms.table.slug')">
+                                    <template slot-scope="scope">
+                                            {{  scope.row.translations.slug }}
+                                    </template>
+                                </el-table-column>
+                                <el-table-column :label="trans('terms.table.status')" width="100">
+                                    <template slot-scope="scope">
+                                        <i class="fa fa-circle" :class="(scope.row.status === 1) ? 'text-success':'text-danger'"></i>
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="actions" :label="trans('core.table.actions')">
@@ -71,17 +89,6 @@
                                     </template>
                                 </el-table-column>
                             </el-table>
-                            <div class="pagination-wrap" style="text-align: center; padding-top: 20px;">
-                                <el-pagination
-                                        @size-change="handleSizeChange"
-                                        @current-change="handleCurrentChange"
-                                        :current-page.sync="meta.current_page"
-                                        :page-sizes="[10, 20, 50, 100]"
-                                        :page-size="parseInt(meta.per_page)"
-                                        layout="total, sizes, prev, pager, next, jumper"
-                                        :total="meta.total">
-                                </el-pagination>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -117,8 +124,15 @@
                 searchQuery: '',
                 tableIsLoading: false,
                 selectedPages: {},
+                showExtraButtons: false,
                 vocabulary: this.$route.params.vocabulary,
+                vocabularyData: ''
             };
+        },
+        watch: {
+            selectedPages() {
+                this.showExtraButtons = this.selectedPages.length >= 1;
+            },
         },
         methods: {
             queryServer(customProperties) {
@@ -146,6 +160,14 @@
                 this.tableIsLoading = true;
                 this.queryServer();
             },
+            fetchVocabulary() {
+                this.loading = true;
+                axios.get(route('api.taxonomy.vocabulary.get', { vocabulary: this.$route.params.vocabulary }))
+                    .then((response) => {
+                        this.loading = false;
+                        this.vocabularyData = response.data.data;
+                    });
+            },
             handleSizeChange(event) {
                 console.log(`per term :${event}`);
                 this.tableIsLoading = true;
@@ -166,6 +188,29 @@
                 this.tableIsLoading = true;
                 this.queryServer({ search: query.target.value });
             },
+            handleExtraActions(action) {
+                const termIds = _.map(this.selectedPages, elem => elem.id);
+                axios.get(route('api.taxonomy.term.mark-status', { action, termIds: JSON.stringify(termIds) }))
+                    .then((response) => {
+                        this.$message({
+                            type: 'success',
+                            message: response.data.message,
+                        });
+                        this.$refs.termTable.clearSelection();
+                        this.data.filter(term => termIds.indexOf(term.id) >= 0)
+                            .map((t) => {
+                                const term = t;
+                                term.status = action === 'mark-online' ? 1 : 0;
+                                return term;
+                            });
+                    })
+                    .catch(() => {
+                        this.$message({
+                            type: 'error',
+                            message: this.trans('core.something went wrong'),
+                        });
+                    });
+            },
             handleSelectionChange(selectedPages) {
                 this.selectedPages = selectedPages;
             },
@@ -174,6 +219,9 @@
             },
         },
         mounted() {
+            if (this.$route.params.vocabulary !== undefined) {
+                this.fetchVocabulary();
+            }
             this.fetchData();
         },
     };

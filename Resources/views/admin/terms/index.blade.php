@@ -12,9 +12,6 @@
 @section('shortcuts')
     <dl class="dl-horizontal">
         <dt><code>c</code></dt>
-        <dd>{{ trans('taxonomy::terms.create page') }}</dd>
+        <dd>{{ trans('taxonomy::terms.create a term') }}</dd>
     </dl>
 @stop
-
-@push('js-stack')
-@endpush

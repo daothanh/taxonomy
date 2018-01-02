@@ -42,7 +42,7 @@ class VocabularyController extends Controller {
 
 		return response()->json( [
 			'errors'  => false,
-			'message' => trans( 'taxonomy::vocabularies.messages.vocabulary created' ),
+			'message' => trans( 'taxonomy::vocabularies.messages.vocabulary was created' ),
 		] );
 	}
 
@@ -53,7 +53,7 @@ class VocabularyController extends Controller {
 
 		return response()->json( [
 			'errors'  => false,
-			'message' => trans( 'taxonomy::vocabularies.messages.vocabulary updated' ),
+			'message' => trans( 'taxonomy::vocabularies.messages.vocabulary was updated' ),
 		] );
 	}
 
@@ -62,7 +62,11 @@ class VocabularyController extends Controller {
 
 		return response()->json( [
 			'errors'  => false,
-			'message' => trans( 'taxonomy::vocabularies.messages.vocabulary deleted' ),
+			'message' => trans( 'taxonomy::vocabularies.messages.vocabulary was deleted' ),
 		] );
+	}
+
+	public function get( Vocabulary $vocabulary ) {
+		return new VocabularyTransformer( $vocabulary );
 	}
 }

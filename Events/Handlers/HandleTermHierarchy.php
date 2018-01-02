@@ -9,13 +9,16 @@ class HandleTermHierarchy {
     public function handle($event=null)
     {
         if ($event instanceof TermHierarchy) {
-            /** @var Term $entity */
-            $entity = $event->getEntity();
+
             $parentIds = array_get($event->getSubmissionData(), 'parent_ids', []);
-            if (!is_array($parentIds)) {
-                $parentIds = explode(",", $parentIds);
+            if (!empty($parentIds)) {
+	            if (!is_array($parentIds)) {
+		            $parentIds = explode(",", $parentIds);
+	            }
+	            /** @var Term $entity */
+	            $entity = $event->getEntity();
+	            $entity->parents()->sync($parentIds);
             }
-            $entity->parents()->sync($parentIds);
         }
 
         if ($event instanceof DeletingTerm) {

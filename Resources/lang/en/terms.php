@@ -58,7 +58,11 @@ return [
 	],
 	'messages'         => [
 		'name is required' => 'Name is required!',
-		'slug is required' => 'Slug is required!'
+		'slug is required' => 'Slug is required!',
+		'term created' => 'Term was created',
+		'term updated' => 'Term was updated',
+		'terms were updated' => 'Terms was updated',
+		'term deleted' => 'Term was deleted',
 	],
 	'validation'       => [
 		'attributes' => [ 'name' => 'position', 'slug' => 'Slug' ],

@@ -8,14 +8,16 @@ class HandleTermLink
     {
         if ($event instanceof TermLink) {
             $entity = $event->getEntity();
-            $postTerms = array_get($event->getSubmissionData(), 'terms', []);
+            $postTerms = array_get($event->getSubmissionData(), 'term_ids', []);
 
             foreach ($postTerms as $vid => $terms) {
                 $syncList = [];
-                foreach ($terms as $fileId) {
-                    $syncList[$fileId] = [];
-                    $syncList[$fileId]['termable_type'] = get_class($entity);
-                    $syncList[$fileId]['order'] = 0;
+                if (!empty($terms)) {
+	                foreach ($terms as $fileId) {
+		                $syncList[$fileId] = [];
+		                $syncList[$fileId]['termable_type'] = get_class($entity);
+		                $syncList[$fileId]['order'] = 0;
+	                }
                 }
                 $entity->termsByVocabularyId($vid)->sync($syncList);
             }
