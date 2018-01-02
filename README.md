@@ -19,3 +19,9 @@ This will download the module, run its migrations.
 composer require daothanh/taxonomy
 php artisan module:migrate Taxonomy
 ```
+### Add Routes
+
+Go to  `reosources/assets/js/app.js`
+- Import Routes: `import TaxonomyRoutes from '../../../Modules/Taxonomy/Assets/js/TaxonomyRoutes';`
+- Add `TaxonomyRoutes` to router: `...TaxonomyRoutes,`
+- Build webpack by `npm run dev`
