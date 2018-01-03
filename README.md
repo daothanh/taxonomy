@@ -1,12 +1,16 @@
 # Taxonomy module
+
 Simple module that help you to manage your taxonomy (category)
+
+[![Latest Version](https://img.shields.io/github/release/daothanh/asgard-taxonomy.svg?style=flat-square)](https://github.com/daothanh/asgar-taxonomy/releases)
+[![Total Downloads](https://img.shields.io/packagist/dt/daothanh/taxonomy.svg?style=flat-square)](https://packagist.org/packages/daothanh/taxonomy)
 
 ## Installation
 
 ### Composer
 
 ``` bash
-composer require daothanh/taxonomy
+composer require daothanh/taxonomy ~1.0
 php artisan module:migrate Taxonomy
 ```
 ### Add Routes
