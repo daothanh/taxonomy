@@ -32,12 +32,13 @@
 <script>
     import axios from 'axios';
     import StringHelpers from '../../../../Core/Assets/js/mixins/StringHelpers.vue';
+
     export default {
         mixins: [StringHelpers],
         props: {
-            vocabularyId: {required: true},
-            entityId: {required: false},
-            entity: {required: true}
+            vocabularyId: { required: true },
+            entityId: { required: false },
+            entity: { required: true },
         },
         data() {
             return {
@@ -45,11 +46,11 @@
                 terms: [],
                 selectedTermIds: [],
                 ld: window._,
-            }
+            };
         },
         methods: {
             fetchTerms() {
-                axios.get(route('api.taxonomy.term.get.all', {vocabulary: this.vocabularyId}))
+                axios.get(route('api.taxonomy.term.get.all', { vocabulary: this.vocabularyId }))
                     .then((response) => {
                         this.terms = response.data.data;
                         this.terms = this.terms.map((t) => {
@@ -58,19 +59,19 @@
                             return term;
                         });
                     });
-
             },
             fetchSelectedTerms() {
                 const properties = {
                     vocabulary_id: this.vocabularyId,
                     entity_id: this.entityId,
-                    entity: this.entity
+                    entity: this.entity,
                 };
 
                 axios.get(route('api.taxonomy.term.get.by', properties))
                     .then((response) => {
-                        let selectedTerms = response.data.data, selectedTermIds = [];
-                        selectedTerms.forEach(function(term) {
+                        let selectedTerms = response.data.data,
+selectedTermIds = [];
+                        selectedTerms.forEach((term) => {
                             selectedTermIds.push(term.id);
                         });
                         this.selectedTermIds[this.vocabularyId] = selectedTermIds;
@@ -86,7 +87,7 @@
             },
             handleChange(value) {
                 this.$emit('changeTerm', this.selectedTermIds);
-            }
+            },
         },
         mounted() {
             if (this.vocabularyId) {
@@ -97,7 +98,6 @@
                 this.fetchVocabulary();
                 this.fetchTerms();
             }
-
-        }
-    }
+        },
+    };
 </script>

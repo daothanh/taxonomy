@@ -8,7 +8,9 @@
                 <el-breadcrumb-item>
                     <a href="/backend">Home</a>
                 </el-breadcrumb-item>
-                <el-breadcrumb-item :to="{name: 'admin.taxonomy.vocabulary.index'}">{{ trans('vocabularies.title.vocabularies') }}</el-breadcrumb-item>
+                <el-breadcrumb-item :to="{name: 'admin.taxonomy.vocabulary.index'}">{{
+                    trans('vocabularies.title.vocabularies') }}
+                </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
 
@@ -26,7 +28,8 @@
                                     </router-link>
                                 </div>
                                 <div class="search el-col el-col-5">
-                                    <el-input prefix-icon="el-icon-search" @keyup.native="performSearch" v-model="searchQuery">
+                                    <el-input prefix-icon="el-icon-search" @keyup.native="performSearch"
+                                              v-model="searchQuery">
                                     </el-input>
                                 </div>
                             </div>
@@ -43,8 +46,8 @@
                                 </el-table-column>
                                 <el-table-column prop="translations.name" :label="trans('vocabularies.table.name')">
                                     <template slot-scope="scope">
-                                        <a @click="$router.push({name: 'admin.taxonomy.term.index', params: {vocabulary: scope.row.id}})">
-                                            {{  scope.row.translations.name }}
+                                        <a href="#" @click.prevent="goToTerms(scope)">
+                                            {{ scope.row.translations.name }}
                                         </a>
                                     </template>
                                 </el-table-column>
@@ -55,13 +58,14 @@
                                 </el-table-column>
                                 <el-table-column prop="machine_name" :label="trans('vocabularies.table.machine name')">
                                     <template slot-scope="scope">
-                                            {{  scope.row.machine_name }}
+                                        {{ scope.row.machine_name }}
                                     </template>
                                 </el-table-column>
                                 <el-table-column prop="actions" :label="trans('core.table.actions')">
                                     <template slot-scope="scope">
                                         <el-button-group>
-                                            <edit-button :to="{ name: 'admin.taxonomy.vocabulary.edit', params: { vocabulary: scope.row.id } }"></edit-button>
+                                            <edit-button
+                                                    :to="{ name: 'admin.taxonomy.vocabulary.edit', params: { vocabulary: scope.row.id } }"></edit-button>
                                             <delete-button :scope="scope" :rows="data"></delete-button>
                                         </el-button-group>
                                     </template>
@@ -83,7 +87,8 @@
                 </div>
             </div>
         </div>
-        <button v-shortkey="['c']" @shortkey="pushRoute({name: 'admin.taxonomy.vocabulary.create'})" v-show="false"></button>
+        <button v-shortkey="['c']" @shortkey="pushRoute({name: 'admin.taxonomy.vocabulary.create'})"
+                v-show="false"></button>
     </div>
 </template>
 
@@ -142,28 +147,31 @@
             handleSizeChange(event) {
                 console.log(`per vocabulary :${event}`);
                 this.tableIsLoading = true;
-                this.queryServer({ per_vocabulary: event });
+                this.queryServer({per_vocabulary: event});
             },
             handleCurrentChange(event) {
                 console.log(`current vocabulary :${event}`);
                 this.tableIsLoading = true;
-                this.queryServer({ vocabulary: event });
+                this.queryServer({vocabulary: event});
             },
             handleSortChange(event) {
                 console.log('sorting', event);
                 this.tableIsLoading = true;
-                this.queryServer({ order_by: event.prop, order: event.order });
+                this.queryServer({order_by: event.prop, order: event.order});
             },
             performSearch(query) {
                 console.log(`searching:${query.target.value}`);
                 this.tableIsLoading = true;
-                this.queryServer({ search: query.target.value });
+                this.queryServer({search: query.target.value});
             },
             handleSelectionChange(selectedPages) {
                 this.selectedPages = selectedPages;
             },
             goToEdit(scope) {
-                this.$router.push({ name: 'admin.taxonomy.vocabulary.edit', params: { vocabulary: scope.row.id } });
+                this.$router.push({name: 'admin.taxonomy.vocabulary.edit', params: {vocabulary: scope.row.id}});
+            },
+            goToTerms(scope) {
+                this.$router.push({name: 'admin.taxonomy.term.index', params: {vocabulary: scope.row.id}});
             },
         },
         mounted() {
@@ -175,6 +183,7 @@
     .text-success {
         color: #13ce66;
     }
+
     .text-danger {
         color: #ff4949;
     }

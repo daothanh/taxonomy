@@ -164,7 +164,7 @@
 <script>
     import axios from 'axios';
     import Form from 'form-backend-validation';
-    import Slugify from '../../../../Core/Assets/js/mixins/Slugify';
+    import Slugify from '../Slugify';
     import ShortcutHelper from '../../../../Core/Assets/js/mixins/ShortcutHelper';
     import ActiveEditor from '../../../../Core/Assets/js/mixins/ActiveEditor';
     import SingleFileSelector from '../../../../Media/Assets/js/mixins/SingleFileSelector';
