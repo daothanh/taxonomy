@@ -171,18 +171,21 @@ class EloquentTermRepository extends EloquentBaseRepository implements TermRepos
      * @param int $vid Vocabulary ID
      * @param int $parent Identity of parent term
      * @param null $maxDepth
+     * @param null $status
      * @return array
      */
-    public function getTree($vid, $parent = 0, $maxDepth = null)
+    public function getTree($vid, $parent = 0, $maxDepth = null, $status = null)
     {
         $items = $this->getQuery()->select([
         'taxonomy__terms.*',
         'taxonomy__terms_hierarchy.parent_id as parent',
         ])->leftJoin('taxonomy__terms_hierarchy', 'id', '=', 'term_id')
-	        ->with(['parents', 'children'])
-        ->where('vocabulary_id', '=', $vid)
-        ->orderBy('pos', 'asc')->get();
-        
+            ->with(['parents', 'children'])
+        ->where('vocabulary_id', '=', $vid);
+        if ($status !== null) {
+            $items->where('status', '=', 1);
+        }
+        $items = $items->orderBy('pos', 'asc')->get();
         return $this->createTree($vid, $items, $parent, $maxDepth);
     }
 
