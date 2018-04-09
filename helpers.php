@@ -26,9 +26,9 @@ function taxonomy_term_repository()
  *
  * @return array
  */
-function taxonomy_get_tree($vid, $parent = 0, $maxDepth = null)
+function taxonomy_get_tree($vid, $parent = 0, $maxDepth = null, $status = null)
 {
-    return taxonomy_term_repository()->getTree($vid, $parent, $maxDepth);
+    return taxonomy_term_repository()->getTree($vid, $parent, $maxDepth, $status);
 }
 
 /**
