@@ -42,15 +42,6 @@
                                         <div class="el-form-item__error" v-if="form.errors.has(locale + '.description')"
                                              v-text="form.errors.first(locale + '.description')"></div>
                                     </el-form-item>
-
-                                    <el-form-item>
-                                        <el-button type="primary" @click="onSubmit()" :loading="loading">
-                                            {{ trans('core.save') }}
-                                        </el-button>
-                                        <el-button @click="onCancel()">{{ trans('core.button.cancel') }}
-                                        </el-button>
-                                    </el-form-item>
-
                                 </el-tab-pane>
                             </el-tabs>
                         </div>
@@ -66,6 +57,18 @@
                                      v-text="form.errors.first('machine_name')"></div>
                             </el-form-item>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box-footer">
+
+                        <el-button class="pull-left" type="primary" @click="onSubmit()" :loading="loading">
+                            {{ trans('core.save') }}
+                        </el-button>
+                        <el-button class="pull-right" @click="onCancel()">{{ trans('core.button.cancel') }}
+                        </el-button>
                     </div>
                 </div>
             </div>
