@@ -36,14 +36,16 @@
                                     <el-form-item :label="trans('terms.form.slug')"
                                                   :class="{'el-form-item is-error': form.errors.has(locale + '.slug') }">
                                         <el-input v-model="term[locale].slug">
-                                            <el-button slot="prepend" @click="generateSlug($event, locale)">Generate</el-button>
+                                            <el-button slot="prepend" @click="generateSlug($event, locale)">Generate
+                                            </el-button>
                                         </el-input>
                                         <div class="el-form-item__error" v-if="form.errors.has(locale + '.slug')"
                                              v-text="form.errors.first(locale + '.slug')"></div>
                                     </el-form-item>
                                     <el-form-item :label="trans('terms.form.description')"
                                                   :class="{'el-form-item is-error': form.errors.has(locale + '.description') }">
-                                        <component :is="getCurrentEditor()" v-model="term[locale].description" :value="term[locale].description">
+                                        <component :is="getCurrentEditor()" v-model="term[locale].description"
+                                                   :value="term[locale].description">
                                         </component>
 
                                         <div class="el-form-item__error" v-if="form.errors.has(locale + '.description')"
@@ -53,67 +55,59 @@
                                         <div class="box-header">
                                             <h4 class="box-title">
                                                 <a class="collapsed" data-toggle="collapse" data-parent="#accordion"
-                                                   :href="`#collapseMeta-${locale}`">
-                                                    {{ trans('terms.form.meta data') }}
+                                                   href="#seo">
+                                                    SEO
                                                 </a>
                                             </h4>
                                         </div>
-                                        <div style="height: 0px;" :id="`collapseMeta-${locale}`"
+                                        <div style="height: 0px;" id="seo"
                                              class="panel-collapse collapse">
                                             <div class="box-body">
-                                                <el-form-item :label="trans('terms.form.meta title')">
-                                                    <el-input v-model="term[locale].meta_title"></el-input>
-                                                </el-form-item>
-                                                <el-form-item :label="trans('terms.form.meta description')">
-                                                    <el-input type="textarea"
-                                                              v-model="term[locale].meta_description"></el-input>
-                                                </el-form-item>
+                                                <el-tabs v-model="activeSeoTab">
+                                                    <el-tab-pane :label="trans('terms.form.meta data')"
+                                                                 key="meta_data" name="meta_data">
+                                            <span slot="label">
+                                                {{ trans('terms.form.meta data') }}
+                                            </span>
+                                                        <el-form-item :label="trans('terms.form.meta title')">
+                                                            <el-input v-model="term[locale].meta_title"></el-input>
+                                                        </el-form-item>
+                                                        <el-form-item :label="trans('terms.form.meta description')">
+                                                            <el-input type="textarea"
+                                                                      v-model="term[locale].meta_description"></el-input>
+                                                        </el-form-item>
+                                                    </el-tab-pane>
+                                                    <el-tab-pane :label="trans('terms.form.facebook data')"
+                                                                 key="facebook_data" name="facebook_data">
+                                            <span slot="label" class="">
+                                                {{ trans('terms.form.facebook data') }}
+                                            </span>
+                                                        <el-form-item :label="trans('terms.form.og title')">
+                                                            <el-input v-model="term[locale].og_title"></el-input>
+                                                        </el-form-item>
+                                                        <el-form-item :label="trans('terms.form.og description')">
+                                                            <el-input type="textarea"
+                                                                      v-model="term[locale].og_description"></el-input>
+                                                        </el-form-item>
+                                                        <el-form-item :label="trans('terms.form.og type')">
+                                                            <el-select v-model="term[locale].og_type"
+                                                                       :placeholder="trans('terms.form.og type')">
+                                                                <el-option
+                                                                        :label="trans('terms.facebook-types.website')"
+                                                                        value="website"></el-option>
+                                                                <el-option
+                                                                        :label="trans('terms.facebook-types.product')"
+                                                                        value="product"></el-option>
+                                                                <el-option
+                                                                        :label="trans('terms.facebook-types.article')"
+                                                                        value="article"></el-option>
+                                                            </el-select>
+                                                        </el-form-item>
+                                                    </el-tab-pane>
+                                                </el-tabs>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="panel box box-primary">
-                                        <div class="box-header">
-                                            <h4 class="box-title">
-                                                <a class="collapsed" data-toggle="collapse" data-parent="#accordion"
-                                                   :href="`#collapseFacebook-${locale}`">
-                                                    {{ trans('terms.form.facebook data') }}
-                                                </a>
-                                            </h4>
-                                        </div>
-                                        <div style="height: 0px;" :id="`collapseFacebook-${locale}`"
-                                             class="panel-collapse collapse">
-                                            <div class="box-body">
-                                                <el-form-item :label="trans('terms.form.og title')">
-                                                    <el-input v-model="term[locale].og_title"></el-input>
-                                                </el-form-item>
-                                                <el-form-item :label="trans('terms.form.og description')">
-                                                    <el-input type="textarea"
-                                                              v-model="term[locale].og_description"></el-input>
-                                                </el-form-item>
-                                                <el-form-item :label="trans('terms.form.og type')">
-                                                    <el-select v-model="term[locale].og_type"
-                                                               :placeholder="trans('terms.form.og type')">
-                                                        <el-option :label="trans('terms.facebook-types.website')"
-                                                                   value="website"></el-option>
-                                                        <el-option :label="trans('terms.facebook-types.product')"
-                                                                   value="product"></el-option>
-                                                        <el-option :label="trans('terms.facebook-types.article')"
-                                                                   value="article"></el-option>
-                                                    </el-select>
-                                                </el-form-item>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <el-form-item>
-                                        <el-button type="primary" @click="onSubmit()" :loading="loading">
-                                            {{ trans('core.save') }}
-                                        </el-button>
-                                        <el-button @click="onCancel()">{{ trans('core.button.cancel') }}
-                                        </el-button>
-                                    </el-form-item>
-
                                 </el-tab-pane>
                             </el-tabs>
                         </div>
@@ -151,15 +145,31 @@
                                      v-text="form.errors.first(locale + 'pos')"></div>
                             </el-form-item>
                             <single-media zone="featured_image" @singleFileSelected="selectSingleFile($event, 'term')"
-                                          entity="Modules\Taxonomy\Entities\Term" :entity-id="$route.params.term"></single-media>
+                                          entity="Modules\Taxonomy\Entities\Term"
+                                          :entity-id="$route.params.term"></single-media>
                             <single-media zone="icon" @singleFileSelected="selectSingleFile($event, 'term')"
-                                          entity="Modules\Taxonomy\Entities\Term" :entity-id="$route.params.term"></single-media>
+                                          entity="Modules\Taxonomy\Entities\Term"
+                                          :entity-id="$route.params.term"></single-media>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box-footer">
+
+                        <el-button class="pull-left" type="primary" @click="onSubmit()" :loading="loading">
+                            {{ trans('core.save') }}
+                        </el-button>
+                        <el-button class="pull-right" @click="onCancel()">{{ trans('core.button.cancel') }}
+                        </el-button>
+                    </div>
+                </div>
+            </div>
         </el-form>
-        <button v-shortkey="['b']" @shortkey="pushRoute({name: 'admin.taxonomy.term.index', params: {vocabulary: vocabulary}})" v-show="false"></button>
+        <button v-shortkey="['b']"
+                @shortkey="pushRoute({name: 'admin.taxonomy.term.index', params: {vocabulary: vocabulary}})"
+                v-show="false"></button>
     </div>
 </template>
 
@@ -174,8 +184,8 @@
     export default {
         mixins: [Slugify, ShortcutHelper, ActiveEditor, SingleFileSelector],
         props: {
-            locales: { default: null },
-            pageTitle: { default: null, String },
+            locales: {default: null},
+            pageTitle: {default: null, String},
         },
         data() {
             return {
@@ -193,11 +203,12 @@
                         og_type: '',
                     }])
                     .fromPairs()
-                    .merge({ vocabulary_id: '', pos: 0, status: '0', parent_ids: []})
+                    .merge({vocabulary_id: '', pos: 0, status: '1', parent_ids: []})
                     .value(),
                 form: new Form(),
                 loading: false,
                 activeTab: window.AsgardCMS.currentLocale || 'en',
+                activeSeoTab: 'meta_data',
                 vocabulary: this.$route.params.vocabulary,
                 terms: [],
                 pickerOptions1: {
@@ -239,7 +250,7 @@
                             type: 'success',
                             message: response.message,
                         });
-                        this.$router.push({ name: 'admin.taxonomy.term.index', params: {vocabulary: this.vocabulary} });
+                        this.$router.push({name: 'admin.taxonomy.term.index', params: {vocabulary: this.vocabulary}});
                     })
                     .catch((error) => {
                         console.log(error);
@@ -251,11 +262,11 @@
                     });
             },
             onCancel() {
-                this.$router.push({ name: 'admin.taxonomy.term.index', params: {vocabulary: this.vocabulary}});
+                this.$router.push({name: 'admin.taxonomy.term.index', params: {vocabulary: this.vocabulary}});
             },
             fetchTerm() {
                 this.loading = true;
-                axios.post(route('api.taxonomy.term.find', { term: this.$route.params.term }))
+                axios.post(route('api.taxonomy.term.find', {term: this.$route.params.term}))
                     .then((response) => {
                         this.loading = false;
                         this.term = response.data.data;
@@ -269,7 +280,7 @@
             },
             getRoute() {
                 if (this.$route.params.term !== undefined) {
-                    return route('api.taxonomy.term.update', { term: this.$route.params.term });
+                    return route('api.taxonomy.term.update', {term: this.$route.params.term});
                 }
                 return route('api.taxonomy.term.store');
             },
@@ -277,7 +288,7 @@
                 this.term[locale].slug = this.slugify(this.term[locale].name);
             },
             fetchTerms() {
-                axios.get(route('api.taxonomy.term.index',{vocabulary: this.vocabulary}))
+                axios.get(route('api.taxonomy.term.index', {vocabulary: this.vocabulary}))
                     .then((response) => {
                         this.terms = response.data.data;
                     });
