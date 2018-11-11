@@ -152,6 +152,8 @@
                             </el-form-item>
                             <single-media zone="featured_image" @singleFileSelected="selectSingleFile($event, 'term')"
                                           entity="Modules\Taxonomy\Entities\Term" :entity-id="$route.params.term"></single-media>
+                            <single-media zone="icon" @singleFileSelected="selectSingleFile($event, 'term')"
+                                          entity="Modules\Taxonomy\Entities\Term" :entity-id="$route.params.term"></single-media>
                         </div>
                     </div>
                 </div>

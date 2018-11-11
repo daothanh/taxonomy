@@ -31,6 +31,11 @@ class Term extends Model
         return $this->filesByZone('featured_image')->first();
     }
 
+    public function getIconAttribute()
+    {
+        return $this->filesByZone('icon')->first();
+    }
+
     public function parents()
     {
         return $this->belongsToMany('Modules\Taxonomy\Entities\Term', 'taxonomy__terms_hierarchy', 'term_id', 'parent_id');

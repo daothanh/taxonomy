@@ -100,9 +100,19 @@ class EloquentTermRepository extends EloquentBaseRepository implements TermRepos
             $parents = [];
             $terms = [];
 
+            $children[$vid] = [];
+            $parents[$vid] = [];
             foreach ($items as $term) {
-                $children[$vid][$term->parent][] = $term->id;
-                $parents[$vid][$term->id][] = $term->parent;
+                if ($term->parents()->count()) {
+                    foreach ($term->parents as $pTerm) {
+                        $children[$vid][$pTerm->id][] = $term->id;
+                        $parents[$vid][$term->id][] = $pTerm->id;
+                    }
+                } else {
+                    $children[$vid][0][] = $term->id;
+                    $parents[$vid][$term->id][] = 0;
+                }
+
                 $terms[$vid][$term->id] = $term;
             }
           //dd($terms);
